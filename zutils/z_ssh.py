@@ -9,9 +9,9 @@ _homed_path = os.path.expanduser(default_dir)
 
 
 @click.command('s')
-@click.option('-a', '--add', is_flag=True, help='Add a new ip relevance')
+@click.option('-a', '--add', is_flag=True, help='Add a new ip relevance,cover exist')
 @click.option('-d', '--delete', is_flag=True, help='Delete a ip relevance')
-@click.option('-u', '--upload-key', is_flag=True, help='Use ssh-copy-id to upload ssh key, option -a enhanced')
+@click.option('-u', '--upload-key', is_flag=True, help='Use ssh-copy-id to upload ssh pub key, option -a enhanced')
 @click.option('-l', '--ls', is_flag=True, help='List all ip (short_ip  ip  user  port)')
 @click.option('-m', '--migrate', help='migrate db to add field')
 @click.argument('short_ip', default='', type=str)
@@ -33,6 +33,8 @@ def ssh_conn(add, delete, upload_key, ls, migrate, short_ip, user, port):
         _save_db(db)
     elif add:
         _add_ip(upload_key, short_ip, db, user, port)
+    elif upload_key:
+        _upload_key(port, user, short_ip)
     else:
         _conn_ip(short_ip, db, user, port)
 
@@ -58,7 +60,12 @@ def _add_ip(upload_key, ip, db, user, port):
     db[ip_suffix] = {'ip': ip, 'user': user, 'port': p}
     _save_db(db)
     if upload_key:
-        os.system('ssh-copy-id -p %s %s@%s' % (p, user, ip))
+        _upload_key(p, user, ip)
+
+
+def _upload_key(port, user, ip):
+    click.echo('Upload ssh pub key to ' + ip + ',user:' + user)
+    os.system('ssh-copy-id -p %s %s@%s' % (port, user, ip))
 
 
 def _conn_ip(short_ip, db, user, port):
