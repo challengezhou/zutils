@@ -16,7 +16,7 @@ _homed_path = os.path.expanduser(default_dir)
 @click.option('-m', '--migrate', help='migrate db to add field')
 @click.argument('short_ip', default='', type=str)
 @click.argument('user', default='', type=str)
-@click.argument('port', default='22', type=str)
+@click.argument('port', default='', type=str)
 def ssh_conn(add, delete, upload_key, ls, migrate, short_ip, user, port):
     '''Utility for ssh connect,use a short ip related to actual_ip'''
     db = _get_db()
@@ -81,8 +81,12 @@ def _conn_ip(short_ip, db, user, port):
         else:
             if not user:
                 user = target.get('user', 'root')
+                if not user:
+                    user = 'root'
             if not port:
                 port = target.get('port', '22')
+                if not port:
+                    port = '22'
             click.echo(
                 'Attempt to conn [ \33[32m%s@%s %s\033[0m ]' % (user, actual_ip, port))
             os.system('ssh -p %s %s@%s' % (port, user, actual_ip))
