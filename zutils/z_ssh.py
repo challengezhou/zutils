@@ -70,15 +70,15 @@ def _upload_key(port, user, ip):
 
 def _conn_ip(short_ip, db, user, port):
     if len(db.keys()) == 0:
-        click.echo('DB no any ip,use -a option to add some')
+        click.echo('DB no any ip,use -a option to add')
     elif not short_ip:
         click.echo('Short_ip must be gaven')
     else:
-        target = db[short_ip]
-        actual_ip = target['ip']
+        target = db.get(short_ip)
         if not target:
             click.echo('No any ip related to %s' % short_ip)
         else:
+            actual_ip = target['ip']
             if not user:
                 user = target.get('user', 'root')
                 if not user:
