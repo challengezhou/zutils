@@ -18,7 +18,7 @@ def ms_to_time(force_ms, force_second, timestamp):
         local = time.localtime(timestamp+1)
         parsed_type = 'second'
     else:
-        if timestamp > 1566993592000:
+        if timestamp > 50000000000:
             local = time.localtime(timestamp/1000)
         else:
             parsed_type = 'second'

@@ -51,7 +51,7 @@ def _list_ip(db):
     record_format = '{:<10s}{:<20s}{:<20s}{:<6s}'
     click.echo(record_format.format('short', 'ip', 'user', 'port'))
     for key in db:
-        click.echo(record_format.format(key, db[key]['ip'], db[key]['user'], db[key]['port'] if db[key]['port'] else '22'))
+        click.echo(record_format.format(key, db[key]['ip'], db[key]['user'], str(db[key]['port'] if db[key]['port'] else '22')))
 
 
 def _add_ip(upload_key, ip, db, user, port):
@@ -109,7 +109,7 @@ def _get_db():
 
 def _take_port(port):
     if not port:
-        return 22
+        return '22'
     return port
 
 
