@@ -34,7 +34,7 @@ def ssh_conn(ip, spec_ip, des, delete, upload_key, ls, migrate, short_ip, user, 
         del db[short_ip]
         _save_db(db)
     elif ip:
-        _add_ip(db, upload_key, ip, user, port, des, spec_ip)
+        _add_ip(db, upload_key, ip, user if user else 'root', port, des, spec_ip)
     elif upload_key:
         _upload_key(ip, user, port)
     else:
@@ -62,7 +62,7 @@ def _add_ip(db, upload_key, ip, user, port, des, spec_ip):
         short_ip = spec_ip
     else:
         short_ip = ip.split('.')[-1]
-        if db[short_ip]:
+        if short_ip in db:
             click.echo("short_ip [" + short_ip + '] exist!')
     p = _take_port(port)
 
